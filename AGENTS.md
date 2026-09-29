@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep PIXEL ARCADE browser-only: Canvas engines own high-frequency gameplay; React owns menus/overlays; localStorage owns persistence, because no backend is permitted.
