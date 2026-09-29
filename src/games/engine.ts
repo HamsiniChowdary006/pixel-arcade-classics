@@ -9,6 +9,6 @@ export abstract class CanvasEngine implements GameEngine {
   private loop=(t:number)=>{if(!this.running)return;const dt=Math.min(.033,(t-this.last)/1000);this.last=t;if(!this.frozen)this.update(dt);this.render();this.raf=requestAnimationFrame(this.loop)};
   protected abstract update(dt:number):void; protected abstract render():void;
   protected clear(){this.ctx.fillStyle="#07060D";this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height)}
-  protected text(text:string,x:number,y:number,color="#EBEBD1"|string="#EBEBD1",size=12,align:CanvasTextAlign="left"){this.ctx.fillStyle=color;this.ctx.font=`${size}px monospace`;this.ctx.textAlign=align;this.ctx.fillText(text,x,y)}
+  protected text(text:string,x:number,y:number,color:string="#EBEBD1",size=12,align:CanvasTextAlign="left"){this.ctx.fillStyle=color;this.ctx.font=`${size}px monospace`;this.ctx.textAlign=align;this.ctx.fillText(text,x,y)}
   protected rect(x:number,y:number,w:number,h:number,color:string){this.ctx.fillStyle=color;this.ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
 }

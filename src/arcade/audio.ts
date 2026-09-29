@@ -1,6 +1,6 @@
 import type { ArcadeSettings, SfxName } from "./types";
 export class ArcadeAudio {
-  private ctx?: AudioContext; private music?: OscillatorNode; private gain?: GainNode; private settings: ArcadeSettings;
+  private ctx: AudioContext | undefined; private music: OscillatorNode | undefined; private gain: GainNode | undefined; private settings: ArcadeSettings;
   constructor(settings: ArcadeSettings) { this.settings = settings; }
   setSettings(v: ArcadeSettings) { this.settings = v; if (this.gain) this.gain.gain.value = v.muted ? 0 : v.music / 900; }
   unlock() { if (!this.ctx) this.ctx = new AudioContext(); if (this.ctx.state === "suspended") void this.ctx.resume(); }
