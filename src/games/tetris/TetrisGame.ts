@@ -36,6 +36,10 @@ const COLORS: Record<string, string> = {
   J: "#4984ff",
   L: "#FF2E94",
 };
+const LINE_CLEAR_SCORES = [0, 100, 300, 500, 800];
+export function lineClearScore(lines: number, level: number) {
+  return (LINE_CLEAR_SCORES[lines] ?? 0) * level;
+}
 export class TetrisGame extends CanvasEngine {
   private board = Array.from({ length: 20 }, () => Array(10).fill(""));
   private piece = this.make();
@@ -49,6 +53,8 @@ export class TetrisGame extends CanvasEngine {
   private press = new Set<string>();
   private flash = 0;
   private piecesPlaced = 0;
+  private flashRows: number[] = [];
+  private popup: { text: string; life: number } | null = null;
   constructor(c: HTMLCanvasElement, h: EngineHooks) {
     super(c, h);
     this.emit();
@@ -114,6 +120,7 @@ export class TetrisGame extends CanvasEngine {
     let n = 0;
     while (this.move(0, 1)) n++;
     this.score += n * 2;
+    if (n > 0) this.emit();
     this.lock();
   }
   private swap() {
@@ -133,15 +140,21 @@ export class TetrisGame extends CanvasEngine {
           this.board[this.piece.y + dy][this.piece.x + dx] = this.piece.type;
       }),
     );
-    const before = this.board.length;
-    this.board = this.board.filter((r) => r.some((v) => !v));
-    const count = before - this.board.length;
+    const completeRows = this.board.reduce<number[]>(
+      (rows, row, index) => (row.every(Boolean) ? [...rows, index] : rows),
+      [],
+    );
+    const count = completeRows.length;
+    this.board = this.board.filter((_, index) => !completeRows.includes(index));
     while (this.board.length < 20) this.board.unshift(Array(10).fill(""));
     if (count) {
+      const clearScore = lineClearScore(count, this.level);
       this.lines += count;
-      this.score += [0, 100, 300, 500, 800][count] * this.level;
+      this.score += clearScore;
       this.level = 1 + Math.floor(this.lines / 10);
       this.flash = 0.22;
+      this.flashRows = completeRows;
+      this.popup = { text: count === 4 ? `TETRIS! +${clearScore}` : `+${clearScore}`, life: 0.75 };
       this.hooks.sfx("clear");
     }
     this.piece = this.next;
@@ -157,10 +170,21 @@ export class TetrisGame extends CanvasEngine {
   }
   protected update(dt: number) {
     this.flash = Math.max(0, this.flash - dt);
-    this.drop += dt * (this.keys.has("ArrowDown") ? 12 : 1);
+    if (this.flash <= 0) this.flashRows = [];
+    if (this.popup) {
+      this.popup.life -= dt;
+      if (this.popup.life <= 0) this.popup = null;
+    }
+    const softDropping = this.keys.has("ArrowDown");
+    this.drop += dt * (softDropping ? 12 : 1);
     const speed = Math.max(0.1, 0.75 - (this.level - 1) * 0.055);
     if (this.drop > speed) {
-      if (!this.move(0, 1)) this.lock();
+      if (this.move(0, 1)) {
+        if (softDropping) {
+          this.score += 1;
+          this.emit();
+        }
+      } else this.lock();
       this.drop = 0;
     }
   }
@@ -177,6 +201,12 @@ export class TetrisGame extends CanvasEngine {
         const v = this.board[y][x];
         if (v) this.block(ox + x * size, oy + y * size, COLORS[v]);
       }
+    if (this.flash) {
+      this.ctx.fillStyle = "#EBEBD1";
+      this.ctx.globalAlpha = Math.min(1, this.flash * 5);
+      for (const row of this.flashRows) this.ctx.fillRect(ox, oy + row * size, 270, size);
+      this.ctx.globalAlpha = 1;
+    }
     let gy = this.piece.y;
     while (this.valid(this.piece.shape, this.piece.x, gy + 1)) gy++;
     this.piece.shape.forEach((r, dy) =>
@@ -197,10 +227,9 @@ export class TetrisGame extends CanvasEngine {
         }
       }),
     );
-    if (this.flash) {
-      this.ctx.fillStyle = "#EBEBD1";
-      this.ctx.globalAlpha = this.flash;
-      this.ctx.fillRect(ox, oy, 270, 540);
+    if (this.popup) {
+      this.ctx.globalAlpha = Math.min(1, this.popup.life * 3);
+      this.text(this.popup.text, ox + 135, oy + 270, "#FFD83C", 14, "center");
       this.ctx.globalAlpha = 1;
     }
   }
