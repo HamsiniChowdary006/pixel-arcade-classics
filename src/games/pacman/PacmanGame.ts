@@ -24,7 +24,12 @@ const RAW = [
 type Direction = [number, number];
 type Enemy = { x: number; y: number; color: string; mode: number; dir: Direction };
 
-const DIRECTIONS: Direction[] = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const DIRECTIONS: Direction[] = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+];
 
 export class PacmanGame extends CanvasEngine {
   private grid: string[][] = RAW.map((row) => row.split(""));
@@ -40,6 +45,8 @@ export class PacmanGame extends CanvasEngine {
   private level = 1;
   private power = 0;
   private step = 0;
+  private pelletsCollected = 0;
+  private enemiesDefeated = 0;
 
   constructor(canvas: HTMLCanvasElement, hooks: EngineHooks) {
     super(canvas, hooks);
@@ -47,7 +54,13 @@ export class PacmanGame extends CanvasEngine {
   }
 
   private emit() {
-    this.hooks.update({ score: this.score, lives: this.lives, level: this.level });
+    this.hooks.update({
+      score: this.score,
+      lives: this.lives,
+      level: this.level,
+      pelletsCollected: this.pelletsCollected,
+      enemiesDefeated: this.enemiesDefeated,
+    });
   }
 
   override key(code: string, down: boolean) {
@@ -80,6 +93,7 @@ export class PacmanGame extends CanvasEngine {
     const cell = row?.[p.x] ?? "#";
     if ((cell === "." || cell === "o") && row) {
       row[p.x] = " ";
+      this.pelletsCollected++;
       this.score += cell === "o" ? 50 : 10;
       if (cell === "o") this.power = 7;
       this.hooks.sfx("pellet");
@@ -87,7 +101,9 @@ export class PacmanGame extends CanvasEngine {
     }
 
     for (const e of this.enemies) {
-      const valid = DIRECTIONS.filter((d) => this.open(e.x + d[0], e.y + d[1]) && !(d[0] === -e.dir[0] && d[1] === -e.dir[1]));
+      const valid = DIRECTIONS.filter(
+        (d) => this.open(e.x + d[0], e.y + d[1]) && !(d[0] === -e.dir[0] && d[1] === -e.dir[1]),
+      );
       if (valid.length > 0) {
         let tx = p.x;
         let ty = p.y;
@@ -101,7 +117,12 @@ export class PacmanGame extends CanvasEngine {
           tx = Math.random() * 17;
           ty = Math.random() * 17;
         }
-        valid.sort((a, b) => (Math.abs(e.x + a[0] - tx) + Math.abs(e.y + a[1] - ty)) - (Math.abs(e.x + b[0] - tx) + Math.abs(e.y + b[1] - ty)));
+        valid.sort(
+          (a, b) =>
+            Math.abs(e.x + a[0] - tx) +
+            Math.abs(e.y + a[1] - ty) -
+            (Math.abs(e.x + b[0] - tx) + Math.abs(e.y + b[1] - ty)),
+        );
         const choice = this.power ? valid[valid.length - 1] : valid[0];
         if (choice) {
           e.dir = choice;
@@ -113,6 +134,7 @@ export class PacmanGame extends CanvasEngine {
       if (e.x === p.x && e.y === p.y) {
         if (this.power) {
           this.score += 200;
+          this.enemiesDefeated++;
           e.x = 8;
           e.y = 8;
           this.hooks.sfx("explode");
