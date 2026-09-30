@@ -147,8 +147,122 @@ header {
 .arcade-room {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, #080719 0 68%, #160d28 68%);
+  z-index: 0;
+  background:
+    radial-gradient(
+      ellipse at 50% 42%,
+      color-mix(in srgb, var(--purple) 18%, transparent),
+      transparent 42%
+    ),
+    linear-gradient(112deg, color-mix(in srgb, var(--pink) 14%, var(--void)) 0%, transparent 28%),
+    linear-gradient(248deg, color-mix(in srgb, var(--cyan) 12%, var(--void)) 0%, transparent 28%),
+    linear-gradient(to bottom, #080719 0 61%, #160d28 61% 100%);
   overflow: hidden;
+}
+.arcade-room::before {
+  content: "";
+  position: absolute;
+  inset: 12% 7% 28%;
+  border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 12%,
+    color-mix(in srgb, var(--purple) 9%, transparent) 12.2% 12.35%
+  );
+  opacity: 0.5;
+}
+.arcade-room::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 46%,
+    transparent 34%,
+    color-mix(in srgb, var(--void) 62%, transparent) 100%
+  );
+}
+.room-ceiling {
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 16%;
+  border-bottom: 2px solid color-mix(in srgb, var(--cyan) 35%, transparent);
+  transform: perspective(240px) rotateX(-18deg);
+  box-shadow: 0 18px 35px color-mix(in srgb, var(--cyan) 18%, transparent);
+}
+.neon-tube {
+  position: absolute;
+  height: 4px;
+  transform: rotate(-18deg);
+  opacity: 0.7;
+}
+.tube-cyan {
+  top: 15%;
+  left: 7%;
+  width: 24%;
+  background: var(--cyan);
+  box-shadow:
+    0 0 12px var(--cyan),
+    0 0 28px color-mix(in srgb, var(--cyan) 55%, transparent);
+}
+.tube-pink {
+  top: 19%;
+  right: 5%;
+  width: 28%;
+  background: var(--pink);
+  box-shadow:
+    0 0 12px var(--pink),
+    0 0 28px color-mix(in srgb, var(--pink) 55%, transparent);
+  transform: rotate(16deg);
+}
+.wall-sign {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  padding: 9px 20px 7px;
+  border: 3px solid var(--pink);
+  background: color-mix(in srgb, var(--void) 88%, transparent);
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--pink) 75%, transparent),
+    7px 7px 0 color-mix(in srgb, var(--purple) 70%, var(--void));
+  font-family: var(--font-pixel);
+  line-height: 1;
+  text-align: center;
+  transform: translateX(-50%) perspective(280px) rotateX(2deg);
+}
+.wall-sign span {
+  color: var(--yellow);
+  font-size: clamp(13px, 2vw, 22px);
+}
+.wall-sign strong {
+  color: var(--cyan);
+  font-size: clamp(14px, 2.2vw, 25px);
+  text-shadow: 0 0 9px var(--cyan);
+}
+.wall-art {
+  position: absolute;
+  top: 22%;
+  padding: 10px 8px;
+  border: 2px solid var(--edge);
+  color: var(--edge);
+  background: var(--deep);
+  font: 9px/1.7 var(--font-small);
+  text-align: center;
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--edge) 45%, var(--void));
+  transform: rotate(-4deg);
+}
+.art-1 {
+  --edge: var(--yellow);
+  left: 4%;
+}
+.art-2 {
+  --edge: var(--green);
+  right: 4%;
+  transform: rotate(5deg);
 }
 .neon-bar {
   position: absolute;
@@ -176,6 +290,25 @@ header {
       42px;
   transform: perspective(300px) rotateX(48deg);
   transform-origin: top;
+  opacity: 0.8;
+  filter: drop-shadow(0 -8px 14px color-mix(in srgb, var(--pink) 18%, transparent));
+}
+.floor-reflection {
+  position: absolute;
+  bottom: 3%;
+  width: 25%;
+  height: 12%;
+  opacity: 0.18;
+  filter: blur(8px);
+  transform: skewX(-20deg);
+}
+.reflection-pink {
+  left: 8%;
+  background: var(--pink);
+}
+.reflection-cyan {
+  right: 10%;
+  background: var(--cyan);
 }
 .poster {
   position: absolute;
@@ -205,6 +338,9 @@ header {
   background: var(--surface);
   border: 4px solid var(--purple);
   clip-path: polygon(10% 0, 90% 0, 100% 20%, 88% 100%, 12% 100%, 0 20%);
+  box-shadow:
+    12px 18px 18px color-mix(in srgb, var(--void) 75%, transparent),
+    0 0 18px color-mix(in srgb, var(--purple) 28%, transparent);
 }
 .mini-cabinet i {
   position: absolute;
@@ -263,6 +399,45 @@ header {
 .plant i:nth-child(3) {
   transform: translate(10px, -10px);
 }
+.stool {
+  position: absolute;
+  bottom: 9%;
+  width: 74px;
+  height: 58px;
+  border-radius: 50% 50% 8px 8px;
+  background: linear-gradient(145deg, #f13c74, #6d143c 62%, #190c20);
+  box-shadow:
+    0 12px 0 #09060e,
+    0 18px 24px #000,
+    0 0 18px color-mix(in srgb, var(--pink) 45%, transparent);
+}
+.stool i,
+.stool b {
+  position: absolute;
+  display: block;
+  background: #5b5266;
+}
+.stool i {
+  left: 13px;
+  right: 13px;
+  bottom: -54px;
+  height: 54px;
+  transform: perspective(80px) rotateX(-12deg);
+}
+.stool b {
+  left: 31px;
+  bottom: -62px;
+  width: 12px;
+  height: 8px;
+  background: #c3b3c5;
+}
+.stool-left {
+  left: 12%;
+}
+.stool-right {
+  right: 12%;
+  transform: scale(0.85);
+}
 .home-menu {
   position: relative;
   z-index: 5;
@@ -311,6 +486,19 @@ header {
     transparent 30%
   );
 }
+.select-screen {
+  max-width: none;
+  min-height: calc(100vh - 58px);
+  overflow: hidden;
+  background-color: transparent;
+  padding-top: clamp(24px, 5vh, 56px);
+}
+.select-screen > h1,
+.select-screen > .cabinet-grid,
+.select-screen > .key-help {
+  position: relative;
+  z-index: 3;
+}
 .menu-screen h1 {
   text-align: center;
   color: var(--yellow);
@@ -324,22 +512,85 @@ header {
   gap: 18px;
   max-width: 1150px;
   margin: auto;
+  align-items: end;
+  perspective: 1100px;
 }
 .cabinet {
   position: relative;
   border: 3px solid var(--edge, var(--pink));
   border-radius: 0;
-  background: var(--surface);
+  background: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--edge) 16%, var(--surface)),
+    var(--surface) 30%,
+    #0a0913 100%
+  );
   color: var(--cream);
   padding: 13px 10px 0;
   box-shadow: 6px 6px 0 color-mix(in srgb, var(--edge, var(--pink)) 45%, var(--void));
   cursor: pointer;
-  min-height: 410px;
+  min-height: 438px;
+  overflow: visible;
+  isolation: isolate;
+  transition:
+    transform 0.16s steps(3),
+    filter 0.16s,
+    box-shadow 0.16s;
+  transform: perspective(700px) rotateY(var(--cabinet-angle, 0deg));
+}
+.cabinet::before {
+  content: "";
+  position: absolute;
+  inset: 9px 8px 0;
+  z-index: -1;
+  clip-path: polygon(5% 0, 95% 0, 100% 11%, 96% 100%, 4% 100%, 0 11%);
+  border: 1px solid color-mix(in srgb, var(--edge) 38%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--edge) 15%, transparent),
+    transparent
+  );
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--edge) 20%, transparent);
+}
+.cabinet::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 7%;
+  bottom: -24px;
+  height: 18px;
+  z-index: -2;
+  background: var(--edge);
+  opacity: 0.28;
+  filter: blur(9px);
+  transform: skewX(-26deg);
+}
+.cabinet:nth-child(1) {
+  --cabinet-angle: 2deg;
+}
+.cabinet:nth-child(2) {
+  --cabinet-angle: 1deg;
+}
+.cabinet:nth-child(3) {
+  --cabinet-angle: -1deg;
+}
+.cabinet:nth-child(4) {
+  --cabinet-angle: -2deg;
 }
 .cabinet h2 {
   font: clamp(11px, 1.4vw, 16px) var(--font-pixel);
   color: var(--edge);
   white-space: nowrap;
+  margin: 2px -3px 14px;
+  padding: 10px 5px;
+  border: 2px solid var(--edge);
+  background: #090812;
+  box-shadow:
+    inset 0 0 12px color-mix(in srgb, var(--edge) 35%, transparent),
+    0 5px 0 #07060d;
+  text-align: center;
+  text-shadow: 0 0 8px var(--edge);
 }
 .accent-pink {
   --edge: var(--pink);
@@ -354,7 +605,8 @@ header {
   --edge: var(--green);
 }
 .cabinet.selected {
-  transform: translateY(-9px);
+  transform: perspective(700px) rotateY(var(--cabinet-angle, 0deg)) translateY(-12px) scale(1.025);
+  filter: brightness(1.12);
   box-shadow:
     7px 9px 0 color-mix(in srgb, var(--edge) 55%, var(--void)),
     0 0 28px color-mix(in srgb, var(--edge) 45%, transparent);
@@ -362,7 +614,7 @@ header {
 .selector {
   visibility: hidden;
   position: absolute;
-  top: -25px;
+  top: -31px;
   left: 47%;
   color: var(--pink);
 }
@@ -371,14 +623,70 @@ header {
   animation: blink 0.7s steps(2) infinite;
 }
 .cabinet-screen {
-  height: 230px;
-  border: 5px solid var(--void);
-  outline: 2px solid var(--edge);
-  background: var(--void);
+  height: 220px;
+  margin: 0 5px;
+  border: 9px solid #0a0911;
+  outline: 2px solid color-mix(in srgb, var(--edge) 88%, var(--cream));
+  background-color: var(--void);
   display: grid;
   place-items: center;
   position: relative;
   overflow: hidden;
+  box-shadow:
+    inset 0 0 20px color-mix(in srgb, var(--edge) 32%, transparent),
+    0 0 13px color-mix(in srgb, var(--edge) 35%, transparent);
+  transform: perspective(500px) rotateX(2deg);
+}
+.cabinet-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    125deg,
+    color-mix(in srgb, white 17%, transparent),
+    transparent 24% 70%,
+    color-mix(in srgb, var(--edge) 12%, transparent)
+  );
+  mix-blend-mode: screen;
+}
+.cabinet-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 5px,
+    color-mix(in srgb, var(--void) 18%, transparent) 5px 7px
+  );
+  opacity: 0.7;
+}
+.preview-pinball {
+  background:
+    radial-gradient(circle at 34% 30%, var(--pink) 0 4%, transparent 5%),
+    radial-gradient(circle at 70% 48%, var(--cyan) 0 7%, transparent 8%),
+    linear-gradient(145deg, #35132d, #07151b 65%);
+}
+.preview-galaga {
+  background:
+    radial-gradient(circle at 22% 25%, var(--cream) 0 1px, transparent 2px) 0 0/31px 29px,
+    linear-gradient(#061524, #10102b);
+}
+.preview-pacman {
+  background:
+    linear-gradient(90deg, transparent 45%, var(--edge) 46% 48%, transparent 49%) 0 0/42px 42px,
+    linear-gradient(var(--edge) 2px, transparent 3px) 0 0/42px 42px,
+    #070b19;
+}
+.preview-tetris {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--edge) 24%, transparent) 1px, transparent 1px) 0
+      0/18px 18px,
+    linear-gradient(color-mix(in srgb, var(--edge) 24%, transparent) 1px, transparent 1px) 0 0/18px
+      18px,
+    #080c18;
 }
 .cabinet-screen i {
   position: absolute;
@@ -410,9 +718,18 @@ header {
     16px 16px var(--edge);
 }
 .cabinet-controls {
-  height: 32px;
-  padding-top: 9px;
+  position: relative;
+  height: 52px;
+  margin: 8px -2px 0;
+  padding-top: 17px;
+  border-top: 3px solid #08070d;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--edge) 34%, var(--surface)),
+    #0d0b17 70%
+  );
   color: var(--edge);
+  box-shadow: 0 6px 0 #07060d;
 }
 .cabinet p {
   border-top: 2px solid var(--edge);

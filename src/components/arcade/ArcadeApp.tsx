@@ -261,6 +261,7 @@ function Select({
 }) {
   return (
     <section className="menu-screen select-screen">
+      <ArcadeDecor />
       <h1>SELECT YOUR MACHINE</h1>
       <div className="cabinet-grid">
         {ids.map((id, i) => (
